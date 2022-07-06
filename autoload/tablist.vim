@@ -35,7 +35,7 @@ function! s:CreateBuf()
   syntax match MoreMsg / >.*$/
   execute 'syntax match Title /^' . s:title . '$/'
   execute 'syntax match Delimiter /^' . s:tabnewMark . '$/'
-  autocmd WinEnter <buffer> call s:Refresh()
+  autocmd BufEnter <buffer> call s:Refresh()
 endfunction
 
 function! s:ShowTablist() abort
@@ -91,7 +91,8 @@ endfunction
 
 function! s:CloseTab(force) range abort
   let l:cmd = a:force ? 'quit!' : 'confirm quit'
-  execute a:firstline ',' a:lastline 'tabdo' l:cmd
+  execute a:firstline ',' a:lastline 'tabdo' 'for tablist_i in range(1, winnr("$")) |' l:cmd '| endfor'
+  silent! unlet tablist_i
   call s:Refresh()
 endfunction
 
