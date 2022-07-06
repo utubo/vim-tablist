@@ -63,12 +63,13 @@ function! s:Refresh() abort
   set noreadonly
   silent %d
   for l:index in range(1, tabpagenr('$'))
-    let l:b = tabpagebuflist(l:index)[0]
+    let l:w = tabpagewinnr(l:index)
+    let l:b = tabpagebuflist(l:index)[l:w - 1]
     let l:name = bufname(l:b)
     if l:name ==# ''
       let l:name = '[No Name]'
     elseif l:name !=# s:title
-      let l:name = l:name . ' > ' . expand('#' . l:b . ':p')
+      let l:name = fnamemodify(l:name, ':t') . ' > ' . expand('#' . l:b . ':p')
     endif
     call setline(l:index, l:name)
   endfor
