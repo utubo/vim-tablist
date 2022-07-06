@@ -32,7 +32,7 @@ function! s:CreateBuf()
   vnoremap <buffer> <silent> K :call <SID>MoveLeft('v')<CR>
   nnoremap <buffer> <silent> o :call <SID>NewTabAfter()<CR>
   nnoremap <buffer> <silent> O :call <SID>NewTabBefore()<CR>
-  syntax match NonText / >.*$/
+  syntax match MoreMsg / >.*$/
   execute 'syntax match Title /^' . s:title . '$/'
   execute 'syntax match Delimiter /^' . s:tabnewMark . '$/'
   autocmd WinEnter <buffer> call s:Refresh()
