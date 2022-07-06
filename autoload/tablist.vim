@@ -41,7 +41,7 @@ endfunction
 function! s:ShowTablist() abort
   for l:i in range(1, tabpagenr('$'))
     for l:b in tabpagebuflist(l:i)
-      if bufname(l:b) ==# s:title
+      if fnamemodify(bufname(l:b), ':t') ==# s:title
         execute 'tabnext' l:i
         execute bufwinnr(l:b) . 'wincmd w'
         return 1
