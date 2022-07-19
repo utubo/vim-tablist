@@ -1,3 +1,5 @@
+let s:save_cpo = &cpo
+set cpo&vim
 
 let s:title = '-TAB LIST-'
 let s:tabnewMark = '-tabnew-'
@@ -155,3 +157,4 @@ function! s:NewTabBefore() abort
   execute l:cmd l:file
 endfunction
 
+let &cpo = s:save_cpo
