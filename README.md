@@ -10,7 +10,7 @@ list tabs and show, close and move tabs.
 
 ```vim
 call dein#add('utubo/vim-tablist')
-nnoremap <silent> <Leader>T <Cmd>call tablist#Show()<CR>
+nnoremap <Leader>T <Cmd>call tablist#Show()<CR>
 ```
 
 ## Keymaps
