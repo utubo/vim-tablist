@@ -16,14 +16,14 @@ endfunction
 
 function! s:CreateBuf()
   0tabnew
-  execute 'file' s:title
+  silent! execute 'file' s:title
   set ft=tablist
   setlocal cursorline
   setlocal nowrap
-  nnoremap <buffer> <silent> <nowait> q :<C-u>call <SID>CloseTablist()<CR>
-  nnoremap <buffer> <silent> <CR> :<C-u>call <SID>ShowTab()<CR>
-  vnoremap <buffer> <silent> <CR> :<C-u>call <SID>ShowTab()<CR>
-  nnoremap <buffer> <silent> r :<C-u>call <SID>Refresh()<CR>
+  nnoremap <buffer> <silent> <nowait> q <Cmd>call <SID>CloseTablist()<CR>
+  nnoremap <buffer> <silent> <CR> <Cmd>call <SID>ShowTab()<CR>
+  vnoremap <buffer> <silent> <CR> <Cmd>call <SID>ShowTab()<CR>
+  nnoremap <buffer> <silent> r <Cmd>call <SID>Refresh()<CR>
   nnoremap <buffer> <silent> d :call <SID>CloseTab(0)<CR>
   vnoremap <buffer> <silent> d :call <SID>CloseTab(0)<CR>
   nnoremap <buffer> <silent> D :call <SID>CloseTab(1)<CR>
