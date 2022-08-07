@@ -32,8 +32,8 @@ function! s:CreateBuf()
   vnoremap <buffer> <silent> J <Cmd>call <SID>MoveRight('v')<CR>
   nnoremap <buffer> <silent> K <Cmd>call <SID>MoveLeft('n')<CR>
   vnoremap <buffer> <silent> K <Cmd>call <SID>MoveLeft('v')<CR>
-  nnoremap <buffer> <silent> o <Cmd>call <SID>NewTabAfter()<CR>
-  nnoremap <buffer> <silent> O <Cmd>call <SID>NewTabBefore()<CR>
+  nnoremap <buffer> <silent> o <Cmd>call <SID>NewTab('o')<CR>
+  nnoremap <buffer> <silent> O <Cmd>call <SID>NewTab('O')<CR>
   syntax match MoreMsg / >.*$/
   execute 'syntax match Title /^' . s:title . '$/'
   execute 'syntax match Delimiter /^' . s:tabnewMark . '$/'
@@ -140,28 +140,19 @@ function! s:Move(f, t, d, m) abort
   endif
 endfunction
 
-function! s:NewTabAfter() abort
+function! s:NewTab(o) abort
   let l:i = line('.')
   set noreadonly
-  execute 'normal! o' . s:tabnewMark . "\<ESC>"
+  execute 'normal! ' a:o . s:tabnewMark . "\<ESC>"
   let &modified = 0
   set readonly
   redraw
   let l:file = input('tabnew ', '' , 'file')
-  let l:cmd = l:i ==# tabpagenr('$') ? '$tabnew' : 'tabnew'
-  call s:ShowTab(l:i)
-  execute l:cmd l:file
-endfunction
-
-function! s:NewTabBefore() abort
-  let l:i = line('.')
-  set noreadonly
-  execute 'normal! O' . s:tabnewMark . "\<ESC>"
-  let &modified = 0
-  set readonly
-  redraw
-  let l:file = input('tabnew ', '' , 'file')
-  let l:cmd = l:i ==# 1 ? '0tabnew' : '-tabnew'
+  if a:o ==# 'o'
+    let l:cmd = l:i ==# tabpagenr('$') ? '$tabnew' : 'tabnew'
+  else
+    let l:cmd = l:i ==# 1 ? '0tabnew' : '-tabnew'
+  endif
   call s:ShowTab(l:i)
   execute l:cmd l:file
 endfunction
