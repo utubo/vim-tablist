@@ -42,12 +42,12 @@ endfunction
 
 " a:firstline
 function! s:first()
-  return sort([line('.'), line('v')])[0]
+  return min([line('.'), line('v')])
 endfunction
 
 " a:lastline
 function! s:last()
-  return sort([line('.'), line('v')])[1]
+  return max([line('.'), line('v')])
 endfunction
 
 function! s:ShowTablist() abort
