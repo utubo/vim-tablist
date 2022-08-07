@@ -24,20 +24,30 @@ function! s:CreateBuf()
   nnoremap <buffer> <silent> <CR> <Cmd>call <SID>ShowTab()<CR>
   vnoremap <buffer> <silent> <CR> <Cmd>call <SID>ShowTab()<CR>
   nnoremap <buffer> <silent> r <Cmd>call <SID>Refresh()<CR>
-  nnoremap <buffer> <silent> d :call <SID>CloseTab(0)<CR>
-  vnoremap <buffer> <silent> d :call <SID>CloseTab(0)<CR>
-  nnoremap <buffer> <silent> D :call <SID>CloseTab(1)<CR>
-  vnoremap <buffer> <silent> D :call <SID>CloseTab(1)<CR>
-  nnoremap <buffer> <silent> J :call <SID>MoveRight('n')<CR>
-  vnoremap <buffer> <silent> J :call <SID>MoveRight('v')<CR>
-  nnoremap <buffer> <silent> K :call <SID>MoveLeft('n')<CR>
-  vnoremap <buffer> <silent> K :call <SID>MoveLeft('v')<CR>
-  nnoremap <buffer> <silent> o :call <SID>NewTabAfter()<CR>
-  nnoremap <buffer> <silent> O :call <SID>NewTabBefore()<CR>
+  nnoremap <buffer> <silent> d <Cmd>call <SID>CloseTab(0)<CR>
+  vnoremap <buffer> <silent> d <Cmd>call <SID>CloseTab(0)<CR>
+  nnoremap <buffer> <silent> D <Cmd>call <SID>CloseTab(1)<CR>
+  vnoremap <buffer> <silent> D <Cmd>call <SID>CloseTab(1)<CR>
+  nnoremap <buffer> <silent> J <Cmd>call <SID>MoveRight('n')<CR>
+  vnoremap <buffer> <silent> J <Cmd>call <SID>MoveRight('v')<CR>
+  nnoremap <buffer> <silent> K <Cmd>call <SID>MoveLeft('n')<CR>
+  vnoremap <buffer> <silent> K <Cmd>call <SID>MoveLeft('v')<CR>
+  nnoremap <buffer> <silent> o <Cmd>call <SID>NewTabAfter()<CR>
+  nnoremap <buffer> <silent> O <Cmd>call <SID>NewTabBefore()<CR>
   syntax match MoreMsg / >.*$/
   execute 'syntax match Title /^' . s:title . '$/'
   execute 'syntax match Delimiter /^' . s:tabnewMark . '$/'
   autocmd BufEnter <buffer> call s:Refresh()
+endfunction
+
+" a:firstline
+function! s:first()
+  return sort([line('.'), line('v')])[0]
+endfunction
+
+" a:lastline
+function! s:last()
+  return sort([line('.'), line('v')])[1]
 endfunction
 
 function! s:ShowTablist() abort
@@ -93,20 +103,20 @@ endfunction
 
 function! s:CloseTab(force) range abort
   let l:cmd = a:force ? 'quit!' : 'confirm quit'
-  execute a:firstline ',' a:lastline 'tabdo' 'for tablist_i in range(1, winnr("$")) |' l:cmd '| endfor'
+  execute s:first() ',' s:last() 'tabdo' 'for tablist_i in range(1, winnr("$")) |' l:cmd '| endfor'
   silent! unlet tablist_i
   call s:Refresh()
 endfunction
 
 function! s:MoveRight(m) range abort
-  if a:lastline !=# line('$')
-    call s:Move(a:lastline + 1, a:firstline - 1, 1, a:m)
+  if s:last() !=# line('$')
+    call s:Move(s:last() + 1, s:first() - 1, 1, a:m)
   endif
 endfunction
 
 function! s:MoveLeft(m) range abort
-  if a:firstline !=# 1
-    call s:Move(a:firstline - 1, a:lastline, -1, a:m)
+  if s:first() !=# 1
+    call s:Move(s:first() - 1, s:last(), -1, a:m)
   endif
 endfunction
 
@@ -118,14 +128,13 @@ endfunction
 
 function! s:Move(f, t, d, m) abort
   let l:nc = s:AddedPos('.', a:d)
-  let l:vs = s:AddedPos("'<", a:d)
-  let l:ve = s:AddedPos("'>", a:d)
+  let l:ve = s:AddedPos("v", a:d)
   execute 'tabnext' a:f
   execute 'tabmove' a:t
   call s:Refresh()
   call setpos('.', l:nc)
   if a:m == 'v'
-    call setpos("'<", l:vs)
+    call setpos("'<", l:nc)
     call setpos("'>", l:ve)
     normal! gv
   endif
